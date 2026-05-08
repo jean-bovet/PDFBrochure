@@ -1,0 +1,55 @@
+name: Booklet
+options:
+  bundleIdPrefix: com.example.booklet
+  deploymentTarget:
+    macOS: "13.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MACOSX_DEPLOYMENT_TARGET: "13.0"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_IDENTITY: "-"
+
+targets:
+  Booklet:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/App
+      - path: Sources/Imposition
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleName: Booklet
+        CFBundleDisplayName: Booklet
+        CFBundleIdentifier: com.example.booklet.Booklet
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        LSMinimumSystemVersion: "13.0"
+        NSHighResolutionCapable: true
+        NSPrincipalClass: NSApplication
+        CFBundlePackageType: APPL
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.booklet.Booklet
+        GENERATE_INFOPLIST_FILE: NO
+        ENABLE_HARDENED_RUNTIME: NO
+        COMBINE_HIDPI_IMAGES: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: ""
+        CODE_SIGN_ENTITLEMENTS: ""
+
+  bookletcli:
+    type: tool
+    platform: macOS
+    sources:
+      - path: Sources/CLI
+      - path: Sources/Imposition
+    settings:
+      base:
+        PRODUCT_NAME: bookletcli
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.booklet.bookletcli
+        ENABLE_HARDENED_RUNTIME: NO
