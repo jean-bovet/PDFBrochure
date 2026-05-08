@@ -1,6 +1,6 @@
-name: Booklet
+name: PDFBrochure
 options:
-  bundleIdPrefix: com.example.booklet
+  bundleIdPrefix: com.arizonasoftware
   deploymentTarget:
     macOS: "13.0"
   createIntermediateGroups: true
@@ -15,7 +15,7 @@ settings:
     CODE_SIGN_IDENTITY: "-"
 
 targets:
-  Booklet:
+  PDFBrochure:
     type: application
     platform: macOS
     sources:
@@ -24,9 +24,9 @@ targets:
     info:
       path: Sources/Info.plist
       properties:
-        CFBundleName: Booklet
-        CFBundleDisplayName: Booklet
-        CFBundleIdentifier: com.example.booklet.Booklet
+        CFBundleName: PDFBrochure
+        CFBundleDisplayName: PDFBrochure
+        CFBundleIdentifier: com.arizonasoftware.PDFBrochure
         CFBundleShortVersionString: "1.0"
         CFBundleVersion: "1"
         LSMinimumSystemVersion: "13.0"
@@ -35,14 +35,14 @@ targets:
         CFBundlePackageType: APPL
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.booklet.Booklet
+        PRODUCT_BUNDLE_IDENTIFIER: com.arizonasoftware.PDFBrochure
         GENERATE_INFOPLIST_FILE: NO
         ENABLE_HARDENED_RUNTIME: NO
         COMBINE_HIDPI_IMAGES: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: ""
         CODE_SIGN_ENTITLEMENTS: ""
 
-  bookletcli:
+  pdfbrochurecli:
     type: tool
     platform: macOS
     sources:
@@ -50,6 +50,6 @@ targets:
       - path: Sources/Imposition
     settings:
       base:
-        PRODUCT_NAME: bookletcli
-        PRODUCT_BUNDLE_IDENTIFIER: com.example.booklet.bookletcli
+        PRODUCT_NAME: pdfbrochurecli
+        PRODUCT_BUNDLE_IDENTIFIER: com.arizonasoftware.pdfbrochurecli
         ENABLE_HARDENED_RUNTIME: NO

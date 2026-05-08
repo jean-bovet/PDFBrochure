@@ -3,10 +3,10 @@ import PDFKit
 
 // Headless wrapper around BookletMaker for testing and scripting.
 // Usage:
-//   bookletcli <input.pdf> <output.pdf> [auto|a4|a3|letter|tabloid] [fit|fill|original]
+//   pdfbrochurecli <input.pdf> <output.pdf> [auto|a4|a3|letter|tabloid] [fit|fill|original]
 
 func usage() -> Never {
-    let msg = "usage: bookletcli <input.pdf> <output.pdf> [auto|a4|a3|letter|tabloid] [fit|fill|original]\n"
+    let msg = "usage: pdfbrochurecli <input.pdf> <output.pdf> [auto|a4|a3|letter|tabloid] [fit|fill|original]\n"
     FileHandle.standardError.write(Data(msg.utf8))
     exit(2)
 }

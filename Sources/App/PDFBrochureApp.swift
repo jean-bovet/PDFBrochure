@@ -6,11 +6,11 @@ import AppKit
 // MARK: - App entry point
 
 @main
-struct BookletApp: App {
-    @StateObject private var model = BookletModel()
+struct PDFBrochureApp: App {
+    @StateObject private var model = PDFBrochureModel()
 
     var body: some Scene {
-        WindowGroup("PDF → Booklet") {
+        WindowGroup("PDFBrochure") {
             RootView()
                 .environmentObject(model)
                 .frame(minWidth: 760, minHeight: 620)
@@ -22,7 +22,7 @@ struct BookletApp: App {
 // MARK: - View model
 
 @MainActor
-final class BookletModel: ObservableObject {
+final class PDFBrochureModel: ObservableObject {
     @Published var inputURL: URL?
     @Published var paperSize: PaperSize = .auto
     @Published var fitMode: FitMode = .fit
@@ -72,7 +72,7 @@ final class BookletModel: ObservableObject {
         }
     }
 
-    /// One-click create: writes `<input>-booklet.pdf` next to the source.
+    /// One-click create: writes `<input>-brochure.pdf` next to the source.
     /// If that name is already taken, suffixes `-2`, `-3`, … until free —
     /// we never silently overwrite an existing file.
     func createBooklet() async {
@@ -96,14 +96,14 @@ final class BookletModel: ObservableObject {
         }
     }
 
-    /// Returns a sibling URL of `inputURL` named `<base>-booklet.pdf`, or
-    /// `<base>-booklet-2.pdf`, `-3`, … if earlier candidates already exist.
+    /// Returns a sibling URL of `inputURL` named `<base>-brochure.pdf`, or
+    /// `<base>-brochure-2.pdf`, `-3`, … if earlier candidates already exist.
     /// The check is plain `FileManager.fileExists` — there's an inherent TOCTOU
     /// gap between picking the name and writing, but the disambiguation
-    /// covers the realistic case (creating two booklets in a row).
+    /// covers the realistic case (creating two brochures in a row).
     static func uniqueOutputURL(forInput inputURL: URL) -> URL {
         let dir = inputURL.deletingLastPathComponent()
-        let base = inputURL.deletingPathExtension().lastPathComponent + "-booklet"
+        let base = inputURL.deletingPathExtension().lastPathComponent + "-brochure"
         let fm = FileManager.default
 
         let first = dir.appendingPathComponent(base + ".pdf")
@@ -121,7 +121,7 @@ final class BookletModel: ObservableObject {
 // MARK: - Root navigation
 
 struct RootView: View {
-    @EnvironmentObject var model: BookletModel
+    @EnvironmentObject var model: PDFBrochureModel
 
     var body: some View {
         ZStack {
@@ -140,7 +140,7 @@ struct RootView: View {
 // MARK: - Step 1: drop a PDF
 
 struct DropView: View {
-    @EnvironmentObject var model: BookletModel
+    @EnvironmentObject var model: PDFBrochureModel
     @State private var isTargeted = false
     @State private var rejectMessage: String?
 
@@ -148,10 +148,10 @@ struct DropView: View {
         VStack(spacing: 24) {
             Spacer(minLength: 0)
 
-            Text("PDF → Booklet")
+            Text("PDFBrochure")
                 .font(.largeTitle.bold())
 
-            Text("Drop a PDF to begin")
+            Text("Drop a PDF to make a brochure")
                 .font(.title3)
                 .foregroundStyle(.secondary)
 
@@ -242,7 +242,7 @@ private struct DropZone: View {
 // MARK: - Step 2: configure, preview, create
 
 struct LayoutView: View {
-    @EnvironmentObject var model: BookletModel
+    @EnvironmentObject var model: PDFBrochureModel
 
     var body: some View {
         VStack(spacing: 0) {
@@ -334,7 +334,7 @@ struct LayoutView: View {
                     if model.isWorking {
                         ProgressView().controlSize(.small)
                     } else {
-                        Label("Create Booklet", systemImage: "book.closed.fill")
+                        Label("Create Brochure", systemImage: "book.closed.fill")
                     }
                 }
                 .keyboardShortcut(.defaultAction)
