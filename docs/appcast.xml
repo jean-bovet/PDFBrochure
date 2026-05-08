@@ -1,0 +1,12 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>PDFBrochure</title>
+        <!--
+            Items are added by scripts/release.sh on each release. See
+            RELEASING.md. Until the first release ships, this file is empty
+            and Sparkle's "Check for Updates…" will simply report there's
+            nothing newer available.
+        -->
+    </channel>
+</rss>

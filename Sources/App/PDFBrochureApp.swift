@@ -2,12 +2,22 @@ import SwiftUI
 import PDFKit
 import UniformTypeIdentifiers
 import AppKit
+import Sparkle
 
 // MARK: - App entry point
 
 @main
 struct PDFBrochureApp: App {
     @StateObject private var model = PDFBrochureModel()
+
+    // Owned by the App so the updater outlives any single window. Starting
+    // the updater immediately is what enables the background "check on launch"
+    // schedule controlled by SUEnableAutomaticChecks in Info.plist.
+    private let updaterController = SPUStandardUpdaterController(
+        startingUpdater: true,
+        updaterDelegate: nil,
+        userDriverDelegate: nil
+    )
 
     var body: some Scene {
         WindowGroup("PDFBrochure") {
@@ -16,6 +26,41 @@ struct PDFBrochureApp: App {
                 .frame(minWidth: 760, minHeight: 620)
         }
         .windowResizability(.contentSize)
+        .commands {
+            // Slot the menu item into the App menu, just under "About PDFBrochure".
+            CommandGroup(after: .appInfo) {
+                CheckForUpdatesView(updater: updaterController.updater)
+            }
+        }
+    }
+}
+
+// MARK: - Sparkle "Check for Updates…" menu item
+
+/// Renders the menu item and reflects Sparkle's `canCheckForUpdates` so the
+/// item disables itself while a check is already in flight.
+struct CheckForUpdatesView: View {
+    @ObservedObject private var checker: CheckForUpdatesViewModel
+    private let updater: SPUUpdater
+
+    init(updater: SPUUpdater) {
+        self.updater = updater
+        self.checker = CheckForUpdatesViewModel(updater: updater)
+    }
+
+    var body: some View {
+        Button("Check for Updates…", action: updater.checkForUpdates)
+            .disabled(!checker.canCheckForUpdates)
+    }
+}
+
+@MainActor
+final class CheckForUpdatesViewModel: ObservableObject {
+    @Published var canCheckForUpdates = false
+
+    init(updater: SPUUpdater) {
+        updater.publisher(for: \.canCheckForUpdates)
+            .assign(to: &$canCheckForUpdates)
     }
 }
 
