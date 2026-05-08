@@ -42,6 +42,16 @@ VERSION=$(awk '/CFBundleShortVersionString:/ {gsub(/[",]/,""); print $2; exit}' 
 DMG_NAME="$APP_NAME-$VERSION.dmg"
 DMG_PATH="$DIST_DIR/$DMG_NAME"
 
+# Refresh PDFBrochure.xcodeproj and Sources/Info.plist from project.yml so the
+# build actually picks up version bumps the developer just made. xcodegen is
+# idempotent — a no-op if nothing changed.
+if ! command -v xcodegen >/dev/null 2>&1; then
+    echo "error: xcodegen not on PATH (brew install xcodegen)" >&2
+    exit 1
+fi
+echo "==> Regenerating Xcode project from project.yml"
+xcodegen generate
+
 echo "==> Building $APP_NAME $VERSION ($CONFIG)"
 xcodebuild \
     -project "$APP_NAME.xcodeproj" \

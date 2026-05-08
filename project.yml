@@ -13,6 +13,13 @@ settings:
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Automatic
     CODE_SIGN_IDENTITY: "-"
+    # arm64-only release per project decision (see RELEASING.md). Identical
+    # for both targets, so kept at the project level.
+    ARCHS: arm64
+    # "Update to Recommended Settings" toggles applied via Xcode and pinned
+    # here so xcodegen regeneration doesn't undo them.
+    DEAD_CODE_STRIPPING: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
 
 targets:
   PDFBrochure:
@@ -49,7 +56,6 @@ targets:
         COMBINE_HIDPI_IMAGES: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         CODE_SIGN_ENTITLEMENTS: PDFBrochure.entitlements
-        ARCHS: arm64
         ONLY_ACTIVE_ARCH: NO
         FRAMEWORK_SEARCH_PATHS:
           - $(PROJECT_DIR)/Frameworks
@@ -67,4 +73,3 @@ targets:
         PRODUCT_NAME: pdfbrochurecli
         PRODUCT_BUNDLE_IDENTIFIER: com.arizonasoftware.pdfbrochurecli
         ENABLE_HARDENED_RUNTIME: NO
-        ARCHS: arm64

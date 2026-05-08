@@ -32,10 +32,10 @@ You'll need:
 ## Cutting a release
 
 1. **Bump the version** in `project.yml`: increment `CFBundleShortVersionString`
-   (e.g. `1.0` → `1.1`) and `CFBundleVersion` (e.g. `1` → `2`). Re-run
-   `xcodegen generate` so the regenerated `Sources/Info.plist` reflects the
-   bump (the release script reads the version directly from `project.yml`,
-   but the build needs the regenerated plist).
+   (e.g. `1.0` → `1.1`) and `CFBundleVersion` (e.g. `1` → `2`). The release
+   script regenerates `PDFBrochure.xcodeproj` and `Sources/Info.plist` for
+   you on every run, so a manual `xcodegen generate` is only needed if
+   you want to open the bumped project in Xcode first.
 
 2. **Write release notes** at `docs/releasenotes/<CFBundleShortVersionString>.md`
    (Markdown). The release script copies this file alongside the DMG so
@@ -67,9 +67,10 @@ You'll need:
    git diff docs/appcast.xml                     # confirm new <item> for X.Y, EdDSA signature populated
    ```
 
-5. **Commit, tag, push.**
+5. **Commit, tag, push.** (`Sources/Info.plist` and `PDFBrochure.xcodeproj/`
+   are gitignored — only the inputs and the appcast move.)
    ```bash
-   git add project.yml Sources/Info.plist docs/appcast.xml docs/releasenotes/X.Y.md
+   git add project.yml docs/appcast.xml docs/releasenotes/X.Y.md
    git commit -m "Release X.Y"
    git tag -a vX.Y -m "PDFBrochure X.Y"
    git push origin main --tags
