@@ -73,3 +73,19 @@ targets:
         PRODUCT_NAME: pdfbrochurecli
         PRODUCT_BUNDLE_IDENTIFIER: com.arizonasoftware.pdfbrochurecli
         ENABLE_HARDENED_RUNTIME: NO
+
+  PDFBrochureTests:
+    type: bundle.unit-test
+    platform: macOS
+    # Pure-logic tests against the imposition layer. The Imposition source
+    # files are compiled directly into this target so the tests don't need
+    # @testable import or a host app.
+    sources:
+      - path: Tests
+      - path: Sources/Imposition
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.arizonasoftware.PDFBrochureTests
+        ENABLE_HARDENED_RUNTIME: NO
+        GENERATE_INFOPLIST_FILE: YES
+        # No TEST_HOST — runs as a free-standing logic bundle.

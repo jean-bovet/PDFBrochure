@@ -227,10 +227,45 @@ struct BookletMaker {
     }
 
     /// Suggests a sensible default sheet size from the source page dimensions.
-    /// A4 input → A4 landscape (two-up to A5). Anything else → auto (preserve size).
+    /// A4 input (either orientation) → A4 landscape (two-up to A5). Anything
+    /// else → auto (preserve input size, double the width).
+    ///
+    /// The previous heuristic compared total area, which incorrectly grouped
+    /// US Letter with A4 (their areas are within ~3.3%). Comparing both
+    /// dimensions in portrait orientation avoids that confusion.
     static func smartDefaultPaper(forFirstPageSize size: CGSize) -> PaperSize {
-        let area = Double(size.width * size.height)
-        let a4 = 595.276 * 841.89
-        return abs(area - a4) / a4 < 0.05 ? .a4 : .auto
+        let portrait: CGSize = size.height >= size.width
+            ? size
+            : CGSize(width: size.height, height: size.width)
+        let tolerance: CGFloat = 5  // pt — generous; A4 portrait is 595.276 × 841.89
+        if abs(portrait.width - 595.276) <= tolerance,
+           abs(portrait.height - 841.89) <= tolerance {
+            return .a4
+        }
+        return .auto
+    }
+
+    /// Returns a sibling URL of `inputURL` named `<base>-<suffix>.pdf`, or
+    /// `<base>-<suffix>-2.pdf`, `-3`, … if earlier candidates already exist.
+    /// The check is plain `FileManager.fileExists` — there's an inherent TOCTOU
+    /// gap between picking the name and writing, but the disambiguation
+    /// covers the realistic case (creating two outputs in a row).
+    static func uniqueOutputURL(
+        forInput inputURL: URL,
+        suffix: String = "brochure"
+    ) -> URL {
+        let dir = inputURL.deletingLastPathComponent()
+        let base = inputURL.deletingPathExtension().lastPathComponent + "-" + suffix
+        let fm = FileManager.default
+
+        let first = dir.appendingPathComponent(base + ".pdf")
+        if !fm.fileExists(atPath: first.path) { return first }
+
+        var n = 2
+        while true {
+            let candidate = dir.appendingPathComponent("\(base)-\(n).pdf")
+            if !fm.fileExists(atPath: candidate.path) { return candidate }
+            n += 1
+        }
     }
 }
