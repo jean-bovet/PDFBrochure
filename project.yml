@@ -77,12 +77,15 @@ targets:
   PDFBrochureTests:
     type: bundle.unit-test
     platform: macOS
-    # Pure-logic tests against the imposition layer. The Imposition source
+    # Pure-logic tests against the imposition layer + view model. The source
     # files are compiled directly into this target so the tests don't need
-    # @testable import or a host app.
+    # @testable import or a host app. PDFBrochureModel deliberately imports
+    # only Combine + PDFKit (not SwiftUI) so it can live in this lightweight
+    # test bundle.
     sources:
       - path: Tests
       - path: Sources/Imposition
+      - path: Sources/App/PDFBrochureModel.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.arizonasoftware.PDFBrochureTests
