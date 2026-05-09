@@ -56,7 +56,7 @@
 
 <p><i>Apple Silicon only. Requires macOS 13 or later.</i></p>
 ]]></description>
-            <enclosure url="https://github.com/jean-bovet/PDFBrochure/releases/download/v0.6/PDFBrochure-0.5.dmg" length="1113670" type="application/octet-stream" sparkle:edSignature="pFEyoze7vmr/G9GvuW1055xhR5bGnUzW6wUQeUZj3+8WOGtQhIP6hwm0fJSXDDL4MYQ/0VxeOjFh/oFO0yDuCg=="/>
+            <enclosure url="https://github.com/jean-bovet/PDFBrochure/releases/download/v0.5/PDFBrochure-0.5.dmg" length="1113670" type="application/octet-stream" sparkle:edSignature="pFEyoze7vmr/G9GvuW1055xhR5bGnUzW6wUQeUZj3+8WOGtQhIP6hwm0fJSXDDL4MYQ/0VxeOjFh/oFO0yDuCg=="/>
         </item>
     </channel>
 </rss>
