@@ -39,8 +39,8 @@ targets:
         CFBundleName: PDFBrochure
         CFBundleDisplayName: PDFBrochure
         CFBundleIdentifier: com.arizonasoftware.PDFBrochure
-        CFBundleShortVersionString: "0.5"
-        CFBundleVersion: "1"
+        CFBundleShortVersionString: "0.6"
+        CFBundleVersion: "2"
         LSMinimumSystemVersion: "13.0"
         NSHighResolutionCapable: true
         NSPrincipalClass: NSApplication

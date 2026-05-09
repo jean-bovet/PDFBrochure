@@ -9,6 +9,33 @@
             nothing newer available.
         -->
         <item>
+            <title>0.6</title>
+            <pubDate>Sat, 09 May 2026 18:59:30 +0200</pubDate>
+            <sparkle:version>2</sparkle:version>
+            <sparkle:shortVersionString>0.6</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[<h2>PDFBrochure 0.6</h2>
+
+<p>Polish update — the app looks better, behaves more deliberately, and is now backed by an automated test suite.</p>
+
+<ul>
+    <li><b>Green book icon.</b> Replaces the previous black-on-white glyph.</li>
+    <li><b>Result screen after creating.</b> Clicking <b>Create Brochure</b> now switches to a dedicated screen that shows a spinner while the PDF is generated, then offers <b>Reveal in Finder</b> or <b>Make another brochure</b>. On error, the screen offers <b>Try again</b> (keeping your loaded PDF and settings) or <b>Start over</b>.</li>
+    <li><b>Cleaner drop screen.</b> The redundant title is gone; the call-to-action <i>"Drop a PDF to make a brochure"</i> now lives directly inside the drop zone.</li>
+    <li><b>Smarter paper-size detection.</b> US Letter input no longer gets mistakenly treated as A4. The previous heuristic compared total area, which placed Letter and A4 within 3% of each other; the new check compares both width and height, so each format routes to its native sheet size.</li>
+</ul>
+
+<p>Behind the scenes: the SwiftUI source was split into one-file-per-screen with <code>#Preview</code> blocks, and a 35-test suite now covers both the saddle-stitch imposition algorithm (verified by rendering output sheets and pixel-sampling each slot) and the new drop / layout / result state machine.</p>
+
+<p><i>Apple Silicon only. Requires macOS 13 or later.</i></p>
+]]></description>
+            <enclosure url="https://github.com/jean-bovet/PDFBrochure/releases/download/v0.6/PDFBrochure-0.6.dmg" length="1215213" type="application/octet-stream" sparkle:edSignature="G9ahFOWLn0A2R314H51S1J+gu52FuYbuoHcSdBBm9nKBZg+Y5AUTbxI8UqSiESCWHH2lQj6gJYDyPCAUsdWqCA=="/>
+            <sparkle:deltas>
+                <enclosure url="https://github.com/jean-bovet/PDFBrochure/releases/download/v0.6/PDFBrochure2-1.delta" sparkle:deltaFrom="1" length="186930" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="977808" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="27zYcA7ZmP84vA+FZNRomWnC7lkE+BHyOpIkJ83vRU9jfZ/tPBeFhIiz3Jz8vIzKzw+dnFzGuCWQPf5uqeTcAA=="/>
+            </sparkle:deltas>
+        </item>
+        <item>
             <title>0.5</title>
             <pubDate>Sat, 09 May 2026 00:26:21 +0200</pubDate>
             <sparkle:version>1</sparkle:version>
@@ -29,7 +56,7 @@
 
 <p><i>Apple Silicon only. Requires macOS 13 or later.</i></p>
 ]]></description>
-            <enclosure url="https://github.com/jean-bovet/PDFBrochure/releases/download/v0.5/PDFBrochure-0.5.dmg" length="1113670" type="application/octet-stream" sparkle:edSignature="pFEyoze7vmr/G9GvuW1055xhR5bGnUzW6wUQeUZj3+8WOGtQhIP6hwm0fJSXDDL4MYQ/0VxeOjFh/oFO0yDuCg=="/>
+            <enclosure url="https://github.com/jean-bovet/PDFBrochure/releases/download/v0.6/PDFBrochure-0.5.dmg" length="1113670" type="application/octet-stream" sparkle:edSignature="pFEyoze7vmr/G9GvuW1055xhR5bGnUzW6wUQeUZj3+8WOGtQhIP6hwm0fJSXDDL4MYQ/0VxeOjFh/oFO0yDuCg=="/>
         </item>
     </channel>
 </rss>
