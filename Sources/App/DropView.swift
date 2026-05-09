@@ -12,10 +12,6 @@ struct DropView: View {
         VStack(spacing: 24) {
             Spacer(minLength: 0)
 
-            Text("Drop a PDF to make a brochure")
-                .font(.title3)
-                .foregroundStyle(.secondary)
-
             DropZone(isTargeted: isTargeted, onClick: pickFile)
                 .onDrop(of: [.fileURL], isTargeted: $isTargeted, perform: handleDrop)
                 .frame(maxWidth: 520, maxHeight: 320)
@@ -86,7 +82,7 @@ private struct DropZone: View {
                 Image(systemName: isTargeted ? "tray.and.arrow.down.fill" : "doc.richtext")
                     .font(.system(size: 64, weight: .light))
                     .foregroundStyle(isTargeted ? Color.accentColor : .secondary)
-                Text(isTargeted ? "Release to load" : "Drop a PDF here")
+                Text(isTargeted ? "Release to load" : "Drop a PDF to make a brochure")
                     .font(.title3)
                 Text("or click to choose a file")
                     .font(.callout)
