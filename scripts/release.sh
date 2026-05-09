@@ -109,9 +109,14 @@ spctl --assess --type open --context context:primary-signature --verbose "$DMG_P
 
 GENERATE_APPCAST="$PROJECT_DIR/scripts/sparkle/generate_appcast"
 DOCS_DIR="$PROJECT_DIR/docs"
-RELNOTES_SRC="$DOCS_DIR/releasenotes/$VERSION.md"
+# Release notes are HTML (Sparkle 2's default rendering for <description>).
+# We deliberately use the .html extension: generate_appcast inspects the file
+# extension to decide which sparkle:format attribute to put on <description>,
+# and ".md" makes it set format="markdown", which then renders our HTML tags
+# as literal text in the update dialog.
+RELNOTES_SRC="$DOCS_DIR/releasenotes/$VERSION.html"
 if [[ -f "$RELNOTES_SRC" ]]; then
-    cp "$RELNOTES_SRC" "$DIST_DIR/$APP_NAME-$VERSION.md"
+    cp "$RELNOTES_SRC" "$DIST_DIR/$APP_NAME-$VERSION.html"
     echo "==> Including release notes from $RELNOTES_SRC"
 else
     echo "warning: no release notes at $RELNOTES_SRC; appcast item will have no description" >&2

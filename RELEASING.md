@@ -37,11 +37,16 @@ You'll need:
    you on every run, so a manual `xcodegen generate` is only needed if
    you want to open the bumped project in Xcode first.
 
-2. **Write release notes** at `docs/releasenotes/<CFBundleShortVersionString>.md`
-   (Markdown). The release script copies this file alongside the DMG so
-   `generate_appcast` embeds it as the appcast item's `<description>`, which
-   is what Sparkle's update prompt displays. If the file is missing, the
-   script warns and produces an item with no description.
+2. **Write release notes** at `docs/releasenotes/<CFBundleShortVersionString>.html`
+   (HTML — `<h2>`, `<p>`, `<ul>`, `<li>`, `<b>`, `<code>`, `<i>` are all
+   fine). The release script copies this file alongside the DMG so
+   `generate_appcast` embeds it as the appcast item's `<description>`,
+   which is what Sparkle's update prompt displays. If the file is missing,
+   the script warns and produces an item with no description.
+
+   > Use `.html`, not `.md` — `generate_appcast` inspects the extension
+   > and sets `sparkle:format="markdown"` for `.md` files, which makes
+   > Sparkle render our HTML tags as literal text in the update dialog.
 
 3. **Run the release script.** Set `SIGN_IDENTITY` to the full identity
    string if you have multiple Developer ID certs:
@@ -70,7 +75,7 @@ You'll need:
 5. **Commit, tag, push.** (`Sources/Info.plist` and `PDFBrochure.xcodeproj/`
    are gitignored — only the inputs and the appcast move.)
    ```bash
-   git add project.yml docs/appcast.xml docs/releasenotes/X.Y.md
+   git add project.yml docs/appcast.xml docs/releasenotes/X.Y.html
    git commit -m "Release X.Y"
    git tag -a vX.Y -m "PDFBrochure X.Y"
    git push origin main --tags
