@@ -39,6 +39,7 @@ NOTARY_PROFILE="${NOTARY_PROFILE:-PB_NOTARY}"
 # fields there rather than at the generated Info.plist (which only exists after
 # a build).
 VERSION=$(awk '/CFBundleShortVersionString:/ {gsub(/[",]/,""); print $2; exit}' "$PROJECT_DIR/project.yml")
+BUILD=$(awk '/CFBundleVersion:/ {gsub(/[",]/,""); print $2; exit}' "$PROJECT_DIR/project.yml")
 DMG_NAME="$APP_NAME-$VERSION.dmg"
 DMG_PATH="$DIST_DIR/$DMG_NAME"
 
@@ -116,10 +117,16 @@ else
     echo "warning: no release notes at $RELNOTES_SRC; appcast item will have no description" >&2
 fi
 if [[ -x "$GENERATE_APPCAST" ]]; then
-    echo "==> Generating appcast (Sparkle account: $SPARKLE_ACCOUNT)"
+    echo "==> Generating appcast (Sparkle account: $SPARKLE_ACCOUNT, version: $BUILD)"
     mkdir -p "$DOCS_DIR"
+    # --versions "$BUILD" scopes generate_appcast to only the current
+    # release's CFBundleVersion. Without it, every DMG sitting in dist/
+    # (e.g. leftover artefacts from prior releases) gets re-stamped with
+    # the *current* version's --download-url-prefix, breaking the historical
+    # enclosure URLs in the appcast.
     "$GENERATE_APPCAST" "$DIST_DIR" \
         --account "$SPARKLE_ACCOUNT" \
+        --versions "$BUILD" \
         --download-url-prefix "https://github.com/jean-bovet/PDFBrochure/releases/download/v$VERSION/" \
         --embed-release-notes \
         -o "$DOCS_DIR/appcast.xml"
