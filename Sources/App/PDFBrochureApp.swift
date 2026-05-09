@@ -202,9 +202,6 @@ struct DropView: View {
         VStack(spacing: 24) {
             Spacer(minLength: 0)
 
-            Text("PDFBrochure")
-                .font(.largeTitle.bold())
-
             Text("Drop a PDF to make a brochure")
                 .font(.title3)
                 .foregroundStyle(.secondary)
