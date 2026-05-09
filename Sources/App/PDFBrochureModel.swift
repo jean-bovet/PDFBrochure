@@ -3,6 +3,17 @@ import PDFKit
 
 @MainActor
 final class PDFBrochureModel: ObservableObject {
+
+    /// The three-screen flow: drop → layout (configure + preview) → result
+    /// (spinner + outcome). RootView switches on this directly.
+    enum Phase: Equatable {
+        case drop
+        case layout
+        case result
+    }
+
+    @Published private(set) var phase: Phase = .drop
+
     @Published var inputURL: URL?
     @Published var paperSize: PaperSize = .auto
     @Published var fitMode: FitMode = .fit
@@ -26,9 +37,12 @@ final class PDFBrochureModel: ObservableObject {
             paperSize = .auto
         }
         fitMode = .fit
+        phase = .layout
         Task { await regeneratePreview() }
     }
 
+    /// Full reset back to the drop view — used by both the LayoutView "Back"
+    /// button and the ResultView "Make another brochure" / "Start over" buttons.
     func reset() {
         inputURL = nil
         previewData = nil
@@ -36,6 +50,15 @@ final class PDFBrochureModel: ObservableObject {
         lastOutputURL = nil
         status = ""
         statusIsError = false
+        phase = .drop
+    }
+
+    /// "Try again" from the result screen on error: keep the loaded PDF and
+    /// previewed settings, drop the error message, return to layout.
+    func backToLayout() {
+        status = ""
+        statusIsError = false
+        phase = .layout
     }
 
     /// Re-renders the preview off the main actor whenever options change.
@@ -58,9 +81,11 @@ final class PDFBrochureModel: ObservableObject {
 
     /// One-click create: writes `<input>-brochure.pdf` next to the source.
     /// If that name is already taken, suffixes `-2`, `-3`, … until free —
-    /// we never silently overwrite an existing file.
+    /// we never silently overwrite an existing file. Switches to the result
+    /// phase before doing the work so the user sees the spinner immediately.
     func createBrochure() async {
         guard let inURL = inputURL else { return }
+        phase = .result
         isWorking = true
         defer { isWorking = false }
 
@@ -87,8 +112,9 @@ final class PDFBrochureModel: ObservableObject {
 
     #if DEBUG
     /// For SwiftUI #Preview blocks only. Bypasses adopt → render so previews
-    /// can show LayoutView in different states without async I/O.
+    /// can show any screen in any state without async I/O.
     func _setForPreview(
+        phase: Phase = .layout,
         inputURL: URL?,
         paperSize: PaperSize = .auto,
         fitMode: FitMode = .fit,
@@ -96,8 +122,10 @@ final class PDFBrochureModel: ObservableObject {
         lastResult: BookletMaker.Result? = nil,
         lastOutputURL: URL? = nil,
         status: String = "",
-        statusIsError: Bool = false
+        statusIsError: Bool = false,
+        isWorking: Bool = false
     ) {
+        self.phase = phase
         self.inputURL = inputURL
         self.paperSize = paperSize
         self.fitMode = fitMode
@@ -106,6 +134,7 @@ final class PDFBrochureModel: ObservableObject {
         self.lastOutputURL = lastOutputURL
         self.status = status
         self.statusIsError = statusIsError
+        self.isWorking = isWorking
     }
     #endif
 }

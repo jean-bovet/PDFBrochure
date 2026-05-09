@@ -69,7 +69,8 @@ struct LayoutView: View {
 
             Divider()
 
-            // Footer: status + create button.
+            // Footer: input/output stats + create button. Outcome and
+            // Reveal-in-Finder live on ResultView now.
             HStack(spacing: 12) {
                 if let r = model.lastResult {
                     Text("\(r.inputPages) input pages → \(r.outputPages) sheet sides · \(Int(r.sheetSize.width))×\(Int(r.sheetSize.height)) pt")
@@ -77,29 +78,13 @@ struct LayoutView: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                if !model.status.isEmpty {
-                    Text(model.status)
-                        .font(.callout)
-                        .foregroundStyle(model.statusIsError ? .red : .green)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                }
-                if let out = model.lastOutputURL {
-                    Button("Reveal in Finder") {
-                        NSWorkspace.shared.activateFileViewerSelecting([out])
-                    }
-                }
                 Button {
                     Task { await model.createBrochure() }
                 } label: {
-                    if model.isWorking {
-                        ProgressView().controlSize(.small)
-                    } else {
-                        Label("Create Brochure", systemImage: "book.closed.fill")
-                    }
+                    Label("Create Brochure", systemImage: "book.closed.fill")
                 }
                 .keyboardShortcut(.defaultAction)
-                .disabled(model.isWorking || model.previewData == nil)
+                .disabled(model.previewData == nil)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
@@ -127,42 +112,5 @@ struct LayoutView: View {
         .frame(width: 760, height: 620)
 }
 
-#Preview("LayoutView — after successful save") {
-    let model = PDFBrochureModel()
-    model._setForPreview(
-        inputURL: URL(fileURLWithPath: "/tmp/Programme 17 mai (A5).pdf"),
-        paperSize: .a4,
-        fitMode: .fit,
-        previewData: PreviewSamples.tinyBookletPDF(pages: 2),
-        lastResult: BookletMaker.Result(
-            inputPages: 4,
-            outputPages: 2,
-            sheetSize: CGSize(width: 841.89, height: 595.276)
-        ),
-        lastOutputURL: URL(fileURLWithPath: "/tmp/Programme 17 mai (A5)-brochure.pdf"),
-        status: "Saved Programme 17 mai (A5)-brochure.pdf — 2 sheet sides at 841×595 pt.",
-        statusIsError: false
-    )
-    return LayoutView()
-        .environmentObject(model)
-        .frame(width: 760, height: 620)
-}
-
-#Preview("LayoutView — error") {
-    let model = PDFBrochureModel()
-    model._setForPreview(
-        inputURL: URL(fileURLWithPath: "/tmp/broken.pdf"),
-        previewData: PreviewSamples.tinyBookletPDF(pages: 2),
-        lastResult: BookletMaker.Result(
-            inputPages: 4,
-            outputPages: 2,
-            sheetSize: CGSize(width: 841.89, height: 595.276)
-        ),
-        status: "Error: Could not create the output PDF.",
-        statusIsError: true
-    )
-    return LayoutView()
-        .environmentObject(model)
-        .frame(width: 760, height: 620)
-}
+// (Outcome and error states moved to ResultView — see ResultView.swift previews.)
 #endif
