@@ -53,6 +53,18 @@ fi
 echo "==> Regenerating Xcode project from project.yml"
 xcodegen generate
 
+# Guard against the .md ↔ .html release-notes trap. generate_appcast keys
+# the sparkle:format attribute off the file extension (.md →
+# sparkle:format="markdown"), so a stray .md re-introduces the
+# "HTML tags shown literally in the update dialog" bug that bit 0.6.
+# The notes themselves are HTML, so they must be .html.
+STRAY_MD=$(find "$PROJECT_DIR/docs/releasenotes" -name "*.md" 2>/dev/null || true)
+if [[ -n "$STRAY_MD" ]]; then
+    echo "error: found .md release-note(s) — convert to .html (see RELEASING.md):" >&2
+    echo "$STRAY_MD" >&2
+    exit 1
+fi
+
 echo "==> Building $APP_NAME $VERSION ($CONFIG)"
 xcodebuild \
     -project "$APP_NAME.xcodeproj" \
@@ -136,6 +148,16 @@ if [[ -x "$GENERATE_APPCAST" ]]; then
         --embed-release-notes \
         -o "$DOCS_DIR/appcast.xml"
     echo "Appcast written to $DOCS_DIR/appcast.xml"
+
+    # Belt-and-braces post-check: even with .html release-notes, abort if
+    # the resulting appcast somehow ended up with the "render HTML as
+    # literal text" attribute. We never want this attribute.
+    if grep -q 'sparkle:format="markdown"' "$DOCS_DIR/appcast.xml"; then
+        echo "error: appcast.xml contains sparkle:format=\"markdown\" — Sparkle would render HTML tags literally" >&2
+        echo "       (release-notes file should be .html, not .md — see RELEASING.md)" >&2
+        exit 1
+    fi
+
     echo "Commit and push docs/appcast.xml after the GitHub release is published."
 else
     echo "warning: $GENERATE_APPCAST not found, skipping appcast generation" >&2
